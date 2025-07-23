@@ -1,33 +1,19 @@
-# Flutter/Dart/Pub related
+# Flutter / Dart
 .dart_tool/
 .packages
 .pub/
 build/
-ios/Flutter/Flutter.framework
-ios/Flutter/Flutter.podspec
-ios/Flutter/App.framework
-
-# Android
-android/.gradle/
-android/app/google-services.json
-
-# VS Code settings
+.flutter-plugins
+.flutter-plugins-dependencies
+.melos_tool/
+.idea/
 .vscode/
 
-# macOS
-macos/Flutter/Flutter.framework
-macos/Flutter/Flutter.podspec
-macos/Flutter/App.framework
+# OS
+.DS_Store
 
-# Xcode
-*.xcworkspace
-*.xcuserstate
-*.xcuserdatad
-DerivedData/
-
-# IDEs
-.idea/
-*.iml
+# Firebase
+android/app/google-services.json
 
 # Other
-*.log
+*.iml
