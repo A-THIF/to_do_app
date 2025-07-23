@@ -1,0 +1,33 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub/
+build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/App.framework
+
+# Android
+android/.gradle/
+android/app/google-services.json
+
+# VS Code settings
+.vscode/
+
+# macOS
+macos/Flutter/Flutter.framework
+macos/Flutter/Flutter.podspec
+macos/Flutter/App.framework
+
+# Xcode
+*.xcworkspace
+*.xcuserstate
+*.xcuserdatad
+DerivedData/
+
+# IDEs
+.idea/
+*.iml
+
+# Other
+*.log
