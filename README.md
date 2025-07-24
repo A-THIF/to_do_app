@@ -208,9 +208,17 @@ android/app/google-services.json
 ## 💡 **Why Fork This**
 
 ✔️ Learn **Firebase Auth & Firestore CRUD**
+
+
 ✔️ Practice custom **Flutter launcher icons**
+
+
 ✔️ Clean starter template for your own To-Do or notes app
+
+
 ✔️ Expand with your own features!
+
+
 
 ---
 
