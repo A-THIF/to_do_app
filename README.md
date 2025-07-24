@@ -8,15 +8,35 @@ Users can **sign up** with email/password or Google and store **tasks with title
 ## ✨ **Features**
 
 ✅ Custom **app icon**
+
+
 ✅ Clean app name: **To Do**
+
+
 📧 Sign in & register with Email and Password
+
+
 🔒 Sign in with Google
+
+
 📝 Create, Read, Update, Delete tasks
+
+
 🗂️ Tasks stored securely per user in **Firebase Firestore**
+
+
 👁️ Toggle password visibility
+
+
 🚪 Safe sign-out with confirmation
+
+
 📌 Friendly UI
+
+
 🚫 Debug banner removed for production feel
+
+
 
 ---
 
