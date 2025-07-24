@@ -1,33 +1,36 @@
-## 📌 To-Do App
+## 📌 **To Do App**
 
-A simple **To-Do List Flutter app** with **Firebase Authentication** and **Firestore Database**.
-Users can **sign up** with email/password or Google, and store **tasks with title & description**, visible **per account**.
-
----
-
-## ✨ Features
-
-* 📧 Sign in & register with Email and Password
-* 🔒 Sign in with Google
-* ✅ Create, Read, Update, Delete tasks
-* 🗂️ Tasks stored per user securely in **Firebase Firestore**
-* 👀 Toggle password visibility
-* 🚫 Safe sign-out with confirmation
-* 📌 Friendly UI
-* 🚩 Debug banner removed for production feel
+A simple **To-Do List Flutter app** named ***To Do*** with a custom **app icon**, **Firebase Authentication**, and **Firestore Database**.
+Users can **sign up** with email/password or Google and store **tasks with title & description**, visible **per account**.
 
 ---
 
-## 🧩 Tech Used
+## ✨ **Features**
 
-* **Flutter 3.32.7**
-* **Dart 3.8.1**
-* **Firebase Auth** (email/password, Google)
-* **Cloud Firestore** (user-specific tasks)
+✅ Custom **app icon**
+✅ Clean app name: **To Do**
+📧 Sign in & register with Email and Password
+🔒 Sign in with Google
+📝 Create, Read, Update, Delete tasks
+🗂️ Tasks stored securely per user in **Firebase Firestore**
+👁️ Toggle password visibility
+🚪 Safe sign-out with confirmation
+📌 Friendly UI
+🚫 Debug banner removed for production feel
 
 ---
 
-## 📂 Project Structure
+## 🧩 **Tech Stack**
+
+* **Flutter:** 3.32.7
+* **Dart:** 3.8.1
+* **Firebase Auth:** (email/password, Google)
+* **Cloud Firestore:** (user-specific tasks)
+* **flutter\_launcher\_icons:** for custom app icon
+
+---
+
+## 📂 **Project Structure**
 
 ```plaintext
 to_do_app/
@@ -40,17 +43,20 @@ to_do_app/
  │   │   ├── add_task_screen.dart  # Add/Edit tasks with title & description
  │   ├── services/
  │   │   ├── firestore_service.dart  # Firestore CRUD per user
+ ├── assets/
+ │   ├── icon/
+ │   │   ├── app_icon.png         # Custom app icon
  ├── android/
  │   ├── app/
  │   │   ├── google-services.json   # (NOT in repo) Android Firebase config
  ├── .gitignore                      # Ensures google-services.json not pushed
- ├── pubspec.yaml                    # Flutter dependencies
+ ├── pubspec.yaml                    # Flutter dependencies & launcher icons config
  ├── README.md                       # This file!
 ```
 
 ---
 
-## ⚙️ How I Connected Firebase (Android only)
+## ⚙️ **How I Connected Firebase (Android)**
 
 1️⃣ **Create Firebase Project**
 
@@ -62,7 +68,7 @@ to_do_app/
 * Click **Add App** → Android icon.
 * Provide your Android package name (from `AndroidManifest.xml`).
 
-3️⃣ \*\*Download \*\***`google-services.json`**
+3️⃣ **Download `google-services.json`**
 
 * Place it in `android/app/`.
 * ✅ **Important:** This file must be **ignored** with `.gitignore`.
@@ -85,20 +91,14 @@ to_do_app/
 
 5️⃣ **Add Firebase packages**
 
-* `firebase_core`
-* `firebase_auth`
-* `cloud_firestore`
-
-In `pubspec.yaml`:
-
 ```yaml
 dependencies:
-  firebase_core: ^x.x.x
-  firebase_auth: ^x.x.x
-  cloud_firestore: ^x.x.x
+  firebase_core: ^2.30.0
+  firebase_auth: ^4.19.0
+  cloud_firestore: ^4.14.0
 ```
 
-6️⃣ \*\*Initialize in \*\***`main.dart`**
+6️⃣ **Initialize in `main.dart`**
 
 ```dart
 void main() async {
@@ -108,22 +108,48 @@ void main() async {
 }
 ```
 
-7️⃣ **Handle Auth & Firestore**
+7️⃣ **Auth & Firestore logic**
 
-* Auth logic in `sign_in_screen.dart` & `register_screen.dart`
+* Auth in `sign_in_screen.dart` & `register_screen.dart`
 * Tasks stored under:
 
   ```
   tasks/{userId}/userTasks/{taskId}
   ```
 
-✅ **Only Android configured**
+✅ **Currently only Android is configured.**
 
 ---
 
-## 🔐 `.gitignore` Important
+## 🗂️ **Custom App Icon & Display Name**
 
-My `.gitignore` includes:
+* Created with [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
+* Updated:
+
+  * `pubspec.yaml` with:
+
+    ```yaml
+    dev_dependencies:
+      flutter_launcher_icons: ^0.13.1
+
+    flutter_launcher_icons:
+      android: true
+      ios: true
+      image_path: assets/icon/app_icon.png
+    ```
+  * Ran:
+
+    ```bash
+    dart run flutter_launcher_icons
+    ```
+* Updated app name:
+
+  * `android/app/src/main/AndroidManifest.xml`: `android:label="To Do"`
+  * `ios/Runner/Info.plist`: `CFBundleDisplayName` → `To Do`
+
+---
+
+## 🔐 **`.gitignore` Important**
 
 ```plaintext
 # Flutter
@@ -136,11 +162,11 @@ build/
 android/app/google-services.json
 ```
 
-**Result:** No private keys pushed!
+✅ **No private keys are pushed!**
 
 ---
 
-## ✅ Tested With
+## ✅ **Tested With**
 
 * **Flutter:** 3.32.7
 * **Dart:** 3.8.1
@@ -148,30 +174,33 @@ android/app/google-services.json
 
 ---
 
-## 🚀 Improvements Possible
+## 🚀 **Improvements Possible**
 
 * Add **iOS support** (`GoogleService-Info.plist`)
-* Upload **images** for tasks (Firebase Storage)
 * Add push notifications
 * Add user avatars
+* Upload images for tasks (Firebase Storage)
 * Better state management (Provider, Bloc, Riverpod)
-* Use `.env` for API keys
+* Use `.env` for secrets
 
 ---
 
-## ✅ Advantages of Forking
+## 💡 **Why Fork This**
 
-* Learn **Firebase Auth**
-* Learn **Firestore CRUD**
-* Get a **starter app** for personal to-do apps
-* Expand to your own features!
+✔️ Learn **Firebase Auth & Firestore CRUD**
+✔️ Practice custom **Flutter launcher icons**
+✔️ Clean starter template for your own To-Do or notes app
+✔️ Expand with your own features!
 
-## ⚠️ Disadvantages of Forking
+---
 
-* You **must** create your **own Firebase project**.
-  This repo **does not** include backend keys (`google-services.json`).
-* Without your own Firebase, **auth and DB will not work**.
+## ⚠️ **Heads Up**
 
-## 👋 Feel free to fork, improve & star ⭐
+You **must** create your **own Firebase project** — this repo **does not** include backend keys (`google-services.json`).
+Without your own Firebase setup, **auth and DB won’t work**.
+
+---
+
+## 👋 **Feel free to fork, improve & star ⭐**
 
 Happy building! 🚀✨
