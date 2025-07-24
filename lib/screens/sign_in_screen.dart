@@ -14,31 +14,73 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool _obscurePassword = true; // for toggle
+  bool _obscurePassword = true;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   Future<void> signInWithEmail() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please fill in both email and password.';
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+        email: email,
+        password: password,
       );
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.message);
+      setState(() {
+        _errorMessage = e.message ?? 'Sign in failed.';
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Something went wrong.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   Future<void> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) return;
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
 
-    final googleAuth = await googleUser.authentication;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      final googleAuth = await googleUser.authentication;
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Google sign in failed.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -54,6 +96,7 @@ class _SignInScreenState extends State<SignInScreen> {
               controller: emailController,
               decoration: const InputDecoration(labelText: 'Email'),
             ),
+            const SizedBox(height: 12),
             TextField(
               controller: passwordController,
               obscureText: _obscurePassword,
@@ -71,16 +114,21 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 45, 91, 129),
-                foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-              ),
-              onPressed: signInWithEmail,
-              child: const Text('Sign in with Email & Password'),
-            ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
+            if (_errorMessage != null)
+              Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 10),
+            _isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 45, 91, 129),
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: signInWithEmail,
+                    child: const Text('Sign in with Email & Password'),
+                  ),
+            const SizedBox(height: 10),
             TextButton(
               onPressed: () {
                 Navigator.push(
@@ -98,7 +146,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   foregroundColor: Colors.black,
                   side: const BorderSide(color: Colors.black12),
                 ),
-                onPressed: signInWithGoogle,
+                onPressed: _isLoading ? null : signInWithGoogle,
                 child: const Text('Sign in with Google'),
               ),
             ),

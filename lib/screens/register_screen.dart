@@ -19,7 +19,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      Navigator.pop(context); // go back to SignInScreen
+      if (!mounted) return; // Check if the widget is still mounted
+      Navigator.pop(context); // Navigate back after successful registration
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);
     }

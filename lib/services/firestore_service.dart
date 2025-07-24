@@ -1,3 +1,5 @@
+// lib/services/firestore_service.dart
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -14,20 +16,25 @@ class FirestoreService {
         .snapshots();
   }
 
-  Future<void> addTask(String title) async {
+  Future<void> addTask(String title, String description) async {
     await _db.collection('tasks').doc(user!.uid).collection('userTasks').add({
       'title': title,
+      'description': description,
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
-  Future<void> updateTask(String docId, String newTitle) async {
+  Future<void> updateTask(
+    String docId,
+    String newTitle,
+    String newDescription,
+  ) async {
     await _db
         .collection('tasks')
         .doc(user!.uid)
         .collection('userTasks')
         .doc(docId)
-        .update({'title': newTitle});
+        .update({'title': newTitle, 'description': newDescription});
   }
 
   Future<void> deleteTask(String docId) async {

@@ -1,36 +1,49 @@
+// lib/screens/add_task_screen.dart
+
 import 'package:flutter/material.dart';
 import '../services/firestore_service.dart';
 
 class AddTaskScreen extends StatefulWidget {
   final String? docId;
   final String? existingTitle;
+  final String? existingDescription;
 
-  const AddTaskScreen({super.key, this.docId, this.existingTitle});
+  const AddTaskScreen({
+    super.key,
+    this.docId,
+    this.existingTitle,
+    this.existingDescription,
+  });
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-  final TextEditingController taskController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   final FirestoreService firestoreService = FirestoreService();
 
   @override
   void initState() {
     super.initState();
     if (widget.existingTitle != null) {
-      taskController.text = widget.existingTitle!;
+      titleController.text = widget.existingTitle!;
+    }
+    if (widget.existingDescription != null) {
+      descriptionController.text = widget.existingDescription!;
     }
   }
 
   void saveTask() {
-    final title = taskController.text.trim();
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
     if (title.isEmpty) return;
 
     if (widget.docId == null) {
-      firestoreService.addTask(title);
+      firestoreService.addTask(title, description);
     } else {
-      firestoreService.updateTask(widget.docId!, title);
+      firestoreService.updateTask(widget.docId!, title, description);
     }
 
     Navigator.pop(context);
@@ -47,8 +60,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         child: Column(
           children: [
             TextField(
-              controller: taskController,
+              controller: titleController,
               decoration: const InputDecoration(labelText: 'Task Title'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: descriptionController,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                alignLabelWithHint: true,
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

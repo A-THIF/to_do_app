@@ -1,3 +1,5 @@
+// lib/screens/home_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,9 +13,29 @@ class HomeScreen extends StatelessWidget {
 
   final FirestoreService firestoreService = FirestoreService();
 
-  Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
+  Future<void> signOut(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          TextButton(
+            child: const Text('Sign Out'),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().signOut();
+    }
   }
 
   @override
@@ -22,13 +44,18 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Your Tasks'),
         actions: [
-          IconButton(icon: const Icon(Icons.logout), onPressed: signOut),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => signOut(context),
+          ),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestoreService.getTasks(),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return const Center(child: Text('Error'));
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error loading tasks.'));
+          }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -39,8 +66,12 @@ class HomeScreen extends StatelessWidget {
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[index];
+              final data = task.data() as Map<String, dynamic>;
+              final title = data['title'] ?? '';
+              final description = data['description'] ?? '';
               return ListTile(
-                title: Text(task['title']),
+                title: Text(title),
+                subtitle: Text(description),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -53,6 +84,7 @@ class HomeScreen extends StatelessWidget {
                             builder: (_) => AddTaskScreen(
                               docId: task.id,
                               existingTitle: task['title'],
+                              existingDescription: task['description'],
                             ),
                           ),
                         );
